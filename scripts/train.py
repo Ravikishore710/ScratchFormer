@@ -23,6 +23,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="configs/baseline.json")
     ap.add_argument("--epochs", type=int, default=None)
+    ap.add_argument("--resume", action="store_true", help="Resume from latest checkpoint if available")
+    ap.add_argument("--skip-overfit", action="store_true", help="Skip overfit check (useful when resuming)")
     args = ap.parse_args()
 
     cfg = Config.load_json(args.config)
@@ -37,9 +39,18 @@ def main():
 
     trainer = Trainer(model, cfg, checkpoint_dir=f"{cfg.output_dir}/model/best_model")
 
+    if args.resume:
+        if trainer.restore_latest():
+            print("[resume] Successfully restored weights from checkpoint.")
+        else:
+            print("[resume] No checkpoint found, starting fresh.")
+
     # ---- Phase 15: tiny-dataset overfit verification ----
-    print("\n[phase 15] tiny-subset overfit check (100 steps on one batch)")
-    trainer.overfit_check(bundle.train_ds, steps=100)
+    if not args.skip_overfit and not args.resume:
+        print("\n[phase 15] tiny-subset overfit check (100 steps on one batch)")
+        trainer.overfit_check(bundle.train_ds, steps=100)
+    else:
+        print("\n[phase 15] Skipping overfit check (resume / skip-overfit enabled)")
 
     # ---- Phase 16-17: full training ----
     print("\n[phase 16-17] full training")
