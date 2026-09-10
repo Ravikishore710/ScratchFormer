@@ -24,8 +24,10 @@ def create_decoder_mask(dec_ids: tf.Tensor, pad_id: int = 0) -> tf.Tensor:
     """Combine padding + causality for decoder self-attention.
 
     (B, L) -> (B, 1, L, L). A query position can never attend to a <PAD> key
-    nor to any future key.
+    nor to any future key, and <PAD> query positions are fully blocked.
     """
-    pad_mask = create_padding_mask(dec_ids, pad_id)          # (B, 1, 1, L)
+    key_pad_mask = create_padding_mask(dec_ids, pad_id)  # (B, 1, 1, L)
+    query_pad_mask = tf.cast(tf.math.equal(dec_ids, pad_id), tf.float32)[:, tf.newaxis, :, tf.newaxis]  # (B, 1, L, 1)
+    pad_mask = tf.maximum(key_pad_mask, query_pad_mask)  # (B, 1, L, L)
     look_ahead = create_look_ahead_mask(tf.shape(dec_ids)[1])  # (L, L)
     return tf.maximum(pad_mask, look_ahead[tf.newaxis, tf.newaxis])
