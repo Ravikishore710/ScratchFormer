@@ -35,6 +35,10 @@ def evaluate_test_set(model, bundle: DataBundle, out_csv: str,
                       n: int = 500, max_len: int = 40) -> dict:
     """Teacher-forced metrics come from Trainer.evaluate; here we generate
     predictions autoregressively and store success/failure cases."""
+    from ..inference.generate import translate
+
+    n = min(n, len(bundle.test_src_text))
+    rows = []
     try:
         from tqdm import tqdm
         iterator = tqdm(range(n), desc="Evaluating test sentences", ncols=80)
