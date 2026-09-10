@@ -350,35 +350,13 @@ scratchformer/
 └── .gitignore
 ```
 
-## 15. Definition of done
-
-- [x] Real seq2seq dataset with clean train/val/test split
-- [x] Custom tokenizer/vocabulary with `<PAD> <UNK> <SOS> <EOS>`
-- [x] Efficient `tf.data` pipeline (batch, prefetch, teacher-forcing shift)
-- [x] Sinusoidal positional encoding (visualized, ablatable)
-- [x] Scaled dot-product attention from scratch
-- [x] Padding mask, causal mask, combined decoder mask
-- [x] Multi-head attention with manual head split/merge
-- [x] FFN, residual connections, LayerNorm
-- [x] Encoder stack + decoder stack (masked self-attn + cross-attn)
-- [x] Complete Transformer with final vocabulary projection
-- [x] Padding-aware loss + custom `GradientTape` loop + warmup LR
-- [x] Tiny-subset overfitting verification gate
-- [x] Autoregressive inference (greedy, stops at `<EOS>`)
-- [x] Test evaluation + failure-case harvesting
-- [x] Attention extraction + visualization (encoder / decoder / cross)
-- [x] Ablation study (PE, heads, width, depth, FFN, warmup) + results CSV
-- [x] Built-in Keras-MHA benchmark row
-- [x] Invariant unit tests (`pytest tests/`)
-- [x] Professional README + reproducible configs + technical report
-
-## 16. Reference
+## 15. Reference
 
 > Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N.,
 > Kaiser, Ł., & Polosukhin, I. (2017). *Attention Is All You Need.*
 > NeurIPS 2017. https://arxiv.org/abs/1706.03762
 
-## 17. Author & Contact
+## 16. Author & Contact
 
 **Venkata Ravi Kishore**  
 - **LinkedIn:** [linkedin.com/in/ravii-kishorre](https://www.linkedin.com/in/ravii-kishorre)  
