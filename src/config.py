@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, asdict, replace
+from pathlib import Path
 
 
 @dataclass
@@ -58,7 +59,8 @@ class Config:
     def to_dict(self) -> dict:
         return asdict(self)
 
-    def save_json(self, path: str) -> None:
+    def save_json(self, path: str | Path) -> None:
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w") as f:
             json.dump(self.to_dict(), f, indent=2)
 

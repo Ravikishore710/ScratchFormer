@@ -113,19 +113,29 @@ class Trainer:
         return True
 
     # ---------------- tiny-subset overfit verification ----------------
-    def overfit_check(self, train_ds, steps: int = 200, log_every: int = 40) -> list[float]:
+    def overfit_check(self, train_ds, steps: int = 100, log_every: int = 20) -> list[float]:
         """Intentionally overfit ONE batch. If loss does not collapse, stop and debug."""
         batch = next(iter(train_ds))
         (src, dec_in), tgt = batch
+        initial_weights = [tf.identity(v) for v in self.model.trainable_variables]
+        opt = tf.keras.optimizers.Adam(learning_rate=1e-3)
         losses = []
         for step in range(1, steps + 1):
-            loss, _ = self.train_step(src, dec_in, tgt)
-            losses.append(loss)
+            with tf.GradientTape() as tape:
+                logits = self.model((src, dec_in), training=True)
+                loss = masked_loss(tgt, logits, self.pad_id, self.cfg.label_smoothing)
+            grads = tape.gradient(loss, self.model.trainable_variables)
+            if self.cfg.clip_norm:
+                grads = [tf.clip_by_norm(g, self.cfg.clip_norm) if g is not None else g for g in grads]
+            opt.apply_gradients(zip(grads, self.model.trainable_variables))
+            losses.append(float(loss))
             if step % log_every == 0 or step == 1:
-                print(f"  overfit step {step:>4}: loss={loss:.4f}")
+                print(f"  overfit step {step:>4}: loss={float(loss):.4f}")
         if losses[-1] > losses[0] * 0.5:
             raise RuntimeError(
                 "Tiny-subset overfit check FAILED: model could not overfit a single "
                 "batch. Debug the architecture/loss before full training.")
         print("  overfit check PASSED: model can memorize a small subset.")
+        for var, init in zip(self.model.trainable_variables, initial_weights):
+            var.assign(init)
         return losses

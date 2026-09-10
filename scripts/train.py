@@ -44,6 +44,7 @@ def main():
     # ---- Phase 16-17: full training ----
     print("\n[phase 16-17] full training")
     history = trainer.fit(bundle.train_ds, bundle.val_ds)
+    Path(f"{cfg.output_dir}/training_curves").mkdir(parents=True, exist_ok=True)
     with open(f"{cfg.output_dir}/training_curves/history_{cfg.exp_name}.json", "w") as f:
         json.dump(history, f, indent=2)
     plot_training_curves(history, f"{cfg.output_dir}/training_curves")

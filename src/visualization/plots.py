@@ -81,7 +81,7 @@ def visualize_attentions(model, bundle, src_text: str, tgt_text: str,
                          out_dir: str, prefix: str = "sample") -> list[str]:
     """Teacher-forced forward pass with attention capture; saves heatmaps."""
     src_ids = bundle.src_tok.encode(src_text, add_special=False, max_len=40)
-    tgt_ids = bundle.tgt_tok.encode(tgt_text, add_special=True, max_len=40)
+    tgt_ids = bundle.tgt_tok.encode(tgt_text, add_special=False, max_len=39) + [bundle.tgt_tok.eos_id]
     n = len(tgt_ids)
     dec_in = [bundle.tgt_tok.sos_id] + tgt_ids[:-1]
 

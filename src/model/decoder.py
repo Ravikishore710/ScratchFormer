@@ -28,14 +28,16 @@ class DecoderBlock(tf.keras.layers.Layer):
         # 1) masked self-attention over the decoder state so far
         if return_attention:
             self_out, self_w = self.self_mha(x, x, x, combined_mask, return_attention=True)
+            x = self.res1(x, self_out, training=training)
             cross_out, cross_w = self.cross_mha(x, enc_output, enc_output,
                                                 enc_padding_mask, return_attention=True)
+            x = self.res2(x, cross_out, training=training)
         else:
             self_out = self.self_mha(x, x, x, combined_mask)
+            x = self.res1(x, self_out, training=training)
             cross_out = self.cross_mha(x, enc_output, enc_output, enc_padding_mask)
+            x = self.res2(x, cross_out, training=training)
             self_w = cross_w = None
-        x = self.res1(x, self_out, training=training)
-        x = self.res2(x, cross_out, training=training)
         x = self.res3(x, self.ffn(x, training=training), training=training)
         if return_attention:
             return x, self_w, cross_w

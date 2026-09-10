@@ -1,5 +1,7 @@
 # ScratchFormer
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ravikishore710/ScratchFormer/blob/main/notebooks/ScratchFormer_Colab_TPU_GPU.ipynb)
+
 **Implement, train, inspect, and ablate a Transformer from scratch in TensorFlow.**
 
 ScratchFormer is a complete experimental deep-learning project: a small

@@ -10,7 +10,7 @@ __pycache__/
 venv/
 
 # data & artifacts (keep folder structure via .gitkeep)
-data/
+/data/
 outputs/**
 !outputs/**/
 !outputs/**/.gitkeep

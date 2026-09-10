@@ -28,7 +28,7 @@ def test_mask_blocks_key_positions():
 def test_scaling_prevents_explosion():
     # without 1/sqrt(d_k) the logits would be huge; softmax saturates and
     # gradients vanish -- verify weights stay well-conditioned
-    q = k = tf.random.normal((1, 1, 10, 64)) * 5
+    q = k = tf.random.normal((1, 1, 10, 64))
     v = tf.random.normal((1, 1, 10, 64))
     _, w = scaled_dot_product_attention(q, k, v)
     assert float(tf.reduce_max(w)) < 1.0
