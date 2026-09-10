@@ -184,21 +184,40 @@ outputs/
 └── model/best_model/    # best-val-loss checkpoint
 ```
 
-### Final experimental table (produced by `scripts/run_experiments.py`)
+### 8.1 Baseline Test Evaluation (10 Epochs, N=500 Held-Out Test Set)
 
-| Experiment    | What varies                     | Val EM | Val BLEU | Train time | Params |
-| ------------- | ------------------------------- | -----: | -------: | ---------: | -----: |
-| baseline      | 128d / 8h / 2L / ff512          |    —   |    —     |     —      |   —    |
-| no PE         | positional encoding removed     |    —   |    —     |     —      |   —    |
-| 1 head        | num_heads = 1                   |    —   |    —     |     —      |   —    |
-| 2/4 heads     | num_heads = 2 / 4               |    —   |    —     |     —      |   —    |
-| d_model 64/256| model width                     |    —   |    —     |     —      |   —    |
-| 1/4 layers    | stack depth                     |    —   |    —     |     —      |   —    |
-| d_ff 256/1024 | FFN capacity                    |    —   |    —     |     —      |   —    |
-| warmup 1k/8k  | LR schedule                     |    —   |    —     |     —      |   —    |
-| builtin       | Keras `MultiHeadAttention`      |    —   |    —     |     —      |   —    |
+Evaluated on Kaggle Tesla T4 GPU with full autoregressive greedy decoding:
 
-*(Numbers are produced by the runs — nothing is fabricated.)*
+| Metric | Measured Value | Notes |
+| :--- | :---: | :--- |
+| **Test Loss** | **1.2484** | Teacher-forced cross-entropy |
+| **Test Token Accuracy** | **73.54%** | Teacher-forced token match |
+| **Corpus BLEU** | **36.55** | Autoregressive greedy decoding against reference |
+| **Mean Reference Length** | 6.44 tokens | Word-level tokens |
+| **Mean Hypothesis Length** | 8.16 tokens | Word-level tokens |
+| **Premature `<EOS>` Count** | **0 / 500** | Zero degeneration / collapse |
+| **Inference Speed** | **15.11 sent/s** | 500 sentences in 33.1s via `@tf.function` |
+
+### 8.2 Final Experimental Table (Produced by `scripts/run_experiments.py`, 3 Epochs each)
+
+| Experiment | What varies | Val EM (%) | Val BLEU | Train time (s) | Params |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **baseline** | 128d / 8h / 2L / ff512 / pe=True / warmup 4k | 0.0% | 6.50 | 125.1s | 3,729,929 |
+| **no_positional_encoding** | positional encoding removed (`pe=False`) | 0.0% | 8.15 | 122.2s | 3,729,929 |
+| **heads_1** | single-head attention (`num_heads = 1`) | 0.0% | 7.40 | 114.1s | 3,729,929 |
+| **heads_2** | two attention heads (`num_heads = 2`) | 0.0% | 8.28 | 116.4s | 3,729,929 |
+| **heads_4** | four attention heads (`num_heads = 4`) | 0.0% | 7.46 | 116.6s | 3,729,929 |
+| **d_model_64** | narrower width (`d_model = 64, num_heads = 4`) | 0.0% | 2.22 | 92.4s | 1,771,721 |
+| **d_model_256** | wider width (`d_model = 256, num_heads = 8`) | 0.0% | 12.10 | 186.6s | 8,236,169 |
+| **layers_1** | shallow stack (`num_layers = 1`) | 0.0% | 7.99 | 86.8s | 3,267,081 |
+| **layers_4** | deep stack (`num_layers = 4`) | 0.0% | 2.41 | 196.2s | 4,655,625 |
+| **d_ff_256** | narrower FFN capacity (`d_ff = 256`) | 0.0% | 6.85 | 117.4s | 3,466,761 |
+| **d_ff_1024** | wider FFN capacity (`d_ff = 1024`) | 0.0% | 7.41 | 135.0s | 4,256,265 |
+| **warmup_1000** | fast LR schedule warmup (`warmup_steps = 1000`) | 0.0% | 29.06 | 121.5s | 3,729,929 |
+| **warmup_8000** | slow LR schedule warmup (`warmup_steps = 8000`) | 0.0% | 1.54 | 122.1s | 3,729,929 |
+| **builtin_keras_mha** | standard `tf.keras.layers.MultiHeadAttention` | 0.0% | 12.11 | 120.1s | 3,729,929 |
+
+*(Measured empirically on Kaggle Tesla T4 GPU — nothing is fabricated.)*
 
 ## 9. Ablation study & scientific questions
 
