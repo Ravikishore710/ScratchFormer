@@ -35,16 +35,30 @@ def evaluate_test_set(model, bundle: DataBundle, out_csv: str,
                       n: int = 500, max_len: int = 40) -> dict:
     """Teacher-forced metrics come from Trainer.evaluate; here we generate
     predictions autoregressively and store success/failure cases."""
+    import sys
+    import time
     from ..inference.generate import translate
 
     n = min(n, len(bundle.test_src_text))
     rows = []
+
+    use_tqdm = True
     try:
         from tqdm import tqdm
-        iterator = tqdm(range(n), desc="Evaluating test sentences", ncols=80)
+        iterator = tqdm(
+            range(n),
+            desc="Generating translations",
+            unit="sent",
+            ncols=100,
+            file=sys.stdout,
+            mininterval=0.5,
+            bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} [{elapsed} elapsed, ETA: {remaining}, {rate_fmt}]"
+        )
     except ImportError:
+        use_tqdm = False
         iterator = range(n)
 
+    t0 = time.time()
     for i in iterator:
         src = bundle.test_src_text[i]
         ref = bundle.test_tgt_text[i]
@@ -54,6 +68,15 @@ def evaluate_test_set(model, bundle: DataBundle, out_csv: str,
             "exact_match": ref.strip() == hyp.strip(),
             "ref_len": len(ref.split()), "hyp_len": len(hyp.split()),
         })
+        if not use_tqdm and ((i + 1) % 25 == 0 or (i + 1) == n):
+            elapsed = time.time() - t0
+            rate = (i + 1) / elapsed
+            remaining = (n - (i + 1)) / rate if rate > 0 else 0
+            print(f"  [{i+1:>3}/{n}] ({(i+1)/n*100:5.1f}%) | "
+                  f"Elapsed: {int(elapsed//60):02d}:{int(elapsed%60):02d} | "
+                  f"ETA: {int(remaining//60):02d}:{int(remaining%60):02d} | "
+                  f"{rate:.2f} sent/s", flush=True)
+
     df = pd.DataFrame(rows)
     Path(out_csv).parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(out_csv, index=False)
