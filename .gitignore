@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# environments
+.venv/
+venv/
+
+# data & artifacts (keep folder structure via .gitkeep)
+data/
+outputs/**
+!outputs/**/
+!outputs/**/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
