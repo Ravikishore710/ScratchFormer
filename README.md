@@ -1,6 +1,12 @@
 # ScratchFormer
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Ravikishore710/ScratchFormer/blob/main/notebooks/ScratchFormer_Colab_TPU_GPU.ipynb)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ravii-kishorre)
+[![GitHub](https://img.shields.io/badge/GitHub-Ravikishore710-black?style=flat&logo=github)](https://github.com/Ravikishore710)
+[![Email](https://img.shields.io/badge/Email-Contact-red?style=flat&logo=gmail)](mailto:venkataravikishore710@gmail.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://www.python.org/)
+[![TensorFlow 2.16+](https://img.shields.io/badge/TensorFlow-2.16%2B-orange.svg)](https://www.tensorflow.org/)
 
 **Implement, train, inspect, and ablate a Transformer from scratch in TensorFlow.**
 
@@ -314,27 +320,33 @@ failure modes worth inspecting by hand.
 
 ```
 scratchformer/
-├── notebooks/07_Transformer_From_Scratch.ipynb
-├── configs/baseline.json
+├── notebooks/
+│   ├── 07_Transformer_From_Scratch.ipynb      # step-by-step interactive walkthrough
+│   ├── ScratchFormer_Colab_TPU_GPU.ipynb      # dedicated Colab runner
+│   └── ScratchFormer_Kaggle_Runner.ipynb      # dedicated Kaggle GPU runner
+├── configs/
+│   └── baseline.json                          # hyperparameter config
 ├── scripts/
-│   ├── train.py            # sanity: overfit check → full training
-│   ├── evaluate.py         # held-out test evaluation + failure harvest
-│   ├── visualize.py        # positional encoding + attention heatmaps
-│   └── run_experiments.py  # ablation grid + built-in benchmark
+│   ├── train.py                               # sanity: overfit check → full training
+│   ├── evaluate.py                            # held-out test evaluation + failure harvest
+│   ├── visualize.py                           # positional encoding + attention heatmaps
+│   └── run_experiments.py                     # ablation grid + built-in benchmark
 ├── src/
 │   ├── config.py
-│   ├── data/               # download, dataset, tokenizer
-│   ├── model/              # masks, attention, layers, embedding, encoder, decoder,
-│   │                       # transformer, builtin benchmark
-│   ├── training/           # losses, LR schedule, GradientTape trainer
-│   ├── inference/          # greedy autoregressive decoding
-│   ├── evaluation/         # BLEU / exact match / prediction harvest
-│   ├── visualization/      # curves + heatmaps
-│   └── experiments/        # ablation runner
-├── tests/                  # mask, attention, model, gradient tests
-├── outputs/                # artifacts (gitignored except .gitkeep)
+│   ├── data/                                  # download, dataset, tokenizer
+│   ├── model/                                 # masks, attention, layers, embedding, encoder, decoder,
+│   │                                          # transformer, builtin benchmark
+│   ├── training/                              # losses, LR schedule, GradientTape trainer
+│   ├── inference/                             # greedy autoregressive decoding
+│   ├── evaluation/                            # BLEU / exact match / prediction harvest
+│   ├── visualization/                         # curves + heatmaps
+│   └── experiments/                           # ablation runner
+├── tests/                                     # mathematical & architectural invariant test suite
+├── outputs/                                   # artifacts (gitignored except .gitkeep)
+├── REPORT.md                                  # technical & empirical report
+├── README.md                                  # documentation
 ├── requirements.txt
-├── LICENSE                 # MIT
+├── LICENSE                                    # MIT
 └── .gitignore
 ```
 
@@ -357,11 +369,19 @@ scratchformer/
 - [x] Attention extraction + visualization (encoder / decoder / cross)
 - [x] Ablation study (PE, heads, width, depth, FFN, warmup) + results CSV
 - [x] Built-in Keras-MHA benchmark row
-- [x] Unit tests (`pytest tests/`)
-- [x] Professional README + reproducible configs
+- [x] Invariant unit tests (`pytest tests/`)
+- [x] Professional README + reproducible configs + technical report
 
 ## 16. Reference
 
 > Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N.,
 > Kaiser, Ł., & Polosukhin, I. (2017). *Attention Is All You Need.*
 > NeurIPS 2017. https://arxiv.org/abs/1706.03762
+
+## 17. Author & Contact
+
+**Venkata Ravi Kishore**  
+- **LinkedIn:** [linkedin.com/in/ravii-kishorre](https://www.linkedin.com/in/ravii-kishorre)  
+- **GitHub:** [@Ravikishore710](https://github.com/Ravikishore710)  
+- **Email:** [venkataravikishore710@gmail.com](mailto:venkataravikishore710@gmail.com)  
+

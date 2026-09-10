@@ -2,7 +2,7 @@
 
 **Project:** From-Scratch Encoder-Decoder Transformer for Machine Translation (English → French)  
 **Repository:** [https://github.com/Ravikishore710/ScratchFormer](https://github.com/Ravikishore710/ScratchFormer)  
-**Authors:** Ravikishore & Antigravity Assistant  
+**Author:** Venkata Ravi Kishore ([LinkedIn](https://www.linkedin.com/in/ravii-kishorre) | [GitHub](https://github.com/Ravikishore710) | [Email](mailto:venkataravikishore710@gmail.com))  
 **Date:** September 2026  
 
 ---
