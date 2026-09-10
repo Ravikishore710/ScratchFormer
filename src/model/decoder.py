@@ -48,6 +48,8 @@ class Decoder(tf.keras.layers.Layer):
     def __init__(self, cfg: Config, name: str = "decoder"):
         super().__init__(name=name)
         self.blocks = [DecoderBlock(cfg, name=f"block_{i}") for i in range(cfg.num_layers)]
+        for i, block in enumerate(self.blocks):
+            setattr(self, f"block_{i}", block)
         self.dropout = tf.keras.layers.Dropout(cfg.dropout)
 
     def call(self, x, enc_output, combined_mask=None, enc_padding_mask=None,
