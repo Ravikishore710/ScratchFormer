@@ -4,6 +4,7 @@ from __future__ import annotations
 import tensorflow as tf
 
 
+@tf.function(reduce_retracing=True)
 def _last_logits(model, src, dec_in):
     return model((src, dec_in), training=False)[:, -1, :]
 

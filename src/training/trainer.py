@@ -27,6 +27,10 @@ class Trainer:
         self.ckpt = self.manager = None
         if checkpoint_dir is not None:
             Path(checkpoint_dir).mkdir(parents=True, exist_ok=True)
+            if len(self.model.trainable_variables) == 0:
+                dummy_src = tf.zeros((1, self.cfg.max_seq_len), dtype=tf.int64)
+                dummy_dec = tf.zeros((1, self.cfg.max_seq_len), dtype=tf.int64)
+                self.model((dummy_src, dummy_dec), training=False)
             self.ckpt = tf.train.Checkpoint(model=self.model, optimizer=self.optimizer)
             self.manager = tf.train.CheckpointManager(self.ckpt, checkpoint_dir, max_to_keep=1)
 
